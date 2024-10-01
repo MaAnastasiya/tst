@@ -20,18 +20,14 @@ def sample():
     # Получаем параметр 'x' из URL
     x = request.args.get('x', type=int)
 
-    if x is None:
-        response = Response(status=200)
+    if x is not None:
+        # Выполняем задачу
+        result = task(x)
+    
+        # Возвращаем результат
+        response = Response(str(result))
         response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
         return response
-
-    # Выполняем задачу
-    result = task(x)
-
-    # Возвращаем результат
-    response = Response(str(result))
-    response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
