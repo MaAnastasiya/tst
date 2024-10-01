@@ -2,46 +2,35 @@ from flask import Flask, request, Response
 
 app = Flask(__name__)
 
-
 # Маршрут /login/
 @app.route('/login/', methods=['GET'])
 def login():
-    # Добавляем отступ (4 пробела) после определения функции
     response = Response("itmo411642")
     response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-
 # Маршрут /sample/
 @app.route('/sample/', methods=['GET'])
 def sample():
     def task(x):
-        # Убедимся, что внутри функции тоже есть отступы
         return x * (x ** 2)
 
-    try:
-        # Получаем параметр 'x' из URL и пытаемся преобразовать его в число
-        x = request.args.get('x', type=int)
-        if x is None:
-            raise ValueError("Parameter 'x' is missing or not an integer.")
+    # Получаем параметр 'x' из URL
+    x = request.args.get('x', type=int)
 
-        # Выполняем задачу
-        result = task(x)
+    # Если x не передан, возвращаем 404 Not Found
+    if x is None:
+        return Response("Not Found", status=404)  # Возвращаем 404
 
-        # Возвращаем результат
-        response = Response(str(result))
-        response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
+    # Выполняем задачу
+    result = task(x)
 
-    except ValueError as e:
-        # Если параметр 'x' некорректный или отсутствует, возвращаем ошибку
-        response = Response(str(e))
-        response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response, 400
-
+    # Возвращаем результат
+    response = Response(str(result))
+    response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
