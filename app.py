@@ -1,13 +1,14 @@
 from flask import Flask, request, Response
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Включаем CORS для всего приложения
 
 # Маршрут /login/
 @app.route('/login/', methods=['GET'])
 def login():
     response = Response("itmo411642")
     response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-    response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
 # Маршрут /sample/
@@ -29,7 +30,6 @@ def sample():
     # Возвращаем результат
     response = Response(str(result))
     response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
-    response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
 if __name__ == '__main__':
